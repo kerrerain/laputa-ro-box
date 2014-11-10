@@ -8,7 +8,7 @@ function Drawer(options) {
 
         processing.setup = function () {
             // Viewport
-            processing.size(300 * scale, 200 * scale);
+            processing.size(400 * scale, 200 * scale);
             // Robot body parts
             neck = new Neck();
             leftArm = new LeftArm();
@@ -25,7 +25,7 @@ function Drawer(options) {
             //
             processing.pushMatrix();
             // Translate
-            processing.translate(150, 0);
+            processing.translate(200, 0);
             //
             neck.display();
             leftArm.display();
@@ -80,10 +80,17 @@ function Drawer(options) {
                 processing.rectMode(processing.CENTER);
                 processing.rect(-100, 125, 40, 20);
                 processing.ellipse(-110, 125, 40, 40);
+                // Thorns
+                processing.beginShape();
+
+                processing.endShape();
                 // Arm
                 processing.beginShape();
-                processing.vertex(-130, 125);
-                processing.bezierVertex(-150, 130, -145, 125, -145, 185);
+                processing.vertex(-130, 116);
+                processing.bezierVertex(-140, 115, -155, 125, -155, 185);
+                processing.bezierVertex(-150, 190, -120, 190, -110, 185);
+                processing.vertex(-110, 145);
+                processing.bezierVertex(-115, 145, -135, 145, -130, 116);
                 processing.endShape();
             };
         }
@@ -94,6 +101,18 @@ function Drawer(options) {
                 processing.rectMode(processing.CENTER);
                 processing.rect(100, 125, 40, 20);
                 processing.ellipse(110, 125, 40, 40);
+                // Thorns
+                processing.beginShape();
+
+                processing.endShape();
+                // Arm
+                processing.beginShape();
+                processing.vertex(130, 116);
+                processing.bezierVertex(140, 115, 155, 125, 155, 185);
+                processing.bezierVertex(150, 190, 120, 190, 110, 185);
+                processing.vertex(110, 145);
+                processing.bezierVertex(115, 145, 135, 145, 130, 116);
+                processing.endShape();
             };
         }
 

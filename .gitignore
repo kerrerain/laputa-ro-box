@@ -1,6 +1,5 @@
 # Created by .gitignore support plugin (hsz.mobi)
 *.iml
 .idea/
-app/bower_components/
 app/styles/main.css
 node_modules/

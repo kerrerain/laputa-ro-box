@@ -76,14 +76,21 @@ function Drawer(options) {
 
         function LeftArm() {
             this.display = function () {
+                // Shoulder
                 processing.rectMode(processing.CENTER);
                 processing.rect(-100, 125, 40, 20);
                 processing.ellipse(-110, 125, 40, 40);
+                // Arm
+                processing.beginShape();
+                processing.vertex(-130, 125);
+                processing.bezierVertex(-150, 130, -145, 125, -145, 185);
+                processing.endShape();
             };
         }
 
         function RightArm() {
             this.display = function () {
+                // Shoulder
                 processing.rectMode(processing.CENTER);
                 processing.rect(100, 125, 40, 20);
                 processing.ellipse(110, 125, 40, 40);

@@ -3,3 +3,4 @@
 .idea/
 app/styles/main.css
 node_modules/
+dist/

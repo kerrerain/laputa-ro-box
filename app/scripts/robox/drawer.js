@@ -31,6 +31,7 @@ module.exports = function () {
         };
 
         processing.draw = function () {
+            processing.background(options.backgroundColor);
             processing.scale(options.scale);
             //
             processing.pushMatrix();

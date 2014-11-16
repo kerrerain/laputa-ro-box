@@ -1,4 +1,5 @@
 var Drawer = require('./drawer')();
+var _ = require('lodash');
 
 module.exports = function(){
 
@@ -18,17 +19,21 @@ module.exports = function(){
         // -- Options management --
         // ------------------------
 
-        b.options = options;
+        var defaultOptions = {
+            scale: 1,
+            width: 100,
+            height: 100,
+            backgroundColor: 200
+        };
 
-        // Default values
-        b.options.scale = b.options.scale ? b.options.scale : 1;
-        b.options.width = box.options.width ? box.options.width : 100;
-        b.options.height = box.options.height ? box.options.height : 100;
+        _.assign(defaultOptions, options);
+        _.assign(defaultOptions, box.options);
 
         // -----------------------
         // -- Drawer management --
         // -----------------------
-        b.drawer = new Drawer(b.options, b.cylinder, b.teeth, b.bodyParts);
+
+        b.drawer = new Drawer(defaultOptions, b.cylinder, b.teeth, b.bodyParts);
     };
 
     Box.prototype.draw = function(processing){

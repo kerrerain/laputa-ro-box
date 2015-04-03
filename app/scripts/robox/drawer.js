@@ -1,55 +1,40 @@
 module.exports = function () {
+  'use strict';
 
-    var options, Cylinder, Teeth, parts;
+  var d, Drawer = function (options, cylinder, teeth, parts) {
+    this.options = options;
+    this.cylinder = cylinder;
+    this.teeth = teeth;
+    this.parts = parts;
+  };
 
-    var d, Drawer = function (_options_, _Cylinder_, _Teeth_, _parts_) {
-        options = _options_;
-        Cylinder = _Cylinder_;
-        Teeth = _Teeth_;
-        parts = _parts_;
+  Drawer.prototype.draw = function (processing) {
+    var self = this;
+
+    processing.setup = function () {
+      // Viewport
+      processing.size(self.options.width * self.options.scale, self.options.height * self.options.scale);
     };
 
-    Drawer.prototype.draw = function (processing) {
-        draw(processing);
+    processing.draw = function () {
+      processing.background(self.options.backgroundColor);
+      processing.scale(self.options.scale);
+      //
+      processing.pushMatrix();
+      // Translate
+      processing.translate(self.options.width / 2, 0);
+
+      self.parts.forEach(function (part) {
+        part.display(processing);
+      });
+
+      self.cylinder.display(processing);
+      self.teeth.display(processing);
+
+      processing.popMatrix();
     };
+  };
 
-    function draw(processing) {
-
-        var drawCylinder, drawTeeth, drawParts = [];
-
-        processing.setup = function () {
-            // Viewport
-            processing.size(options.width * options.scale, options.height * options.scale);
-
-            drawCylinder = new Cylinder(processing);
-            drawTeeth = new Teeth(processing);
-
-            parts.forEach(function (Part) {
-                drawParts.push(new Part(processing));
-            });
-
-        };
-
-        processing.draw = function () {
-            processing.background(options.backgroundColor);
-            processing.scale(options.scale);
-            //
-            processing.pushMatrix();
-            // Translate
-            processing.translate(options.width / 2, 0);
-
-            drawParts.forEach(function (part) {
-                part.display();
-            });
-
-            drawCylinder.display();
-            drawTeeth.display();
-
-            processing.popMatrix();
-        };
-
-    }
-
-    return Drawer;
+  return Drawer;
 
 };

@@ -1,45 +1,51 @@
 var Drawer = require('./drawer')();
+var Player = require('./player')();
 var _ = require('lodash');
 
-module.exports = function(){
+module.exports = function () {
 
-    var b, Box = function (box, options){
+  var b, Box = function (box, options) {
 
-        b = this;
+    b = this;
 
-        // --------------------------
-        // -- Parts of the drawing --
-        // --------------------------
+    // --------------------------
+    // -- Parts of the drawing --
+    // --------------------------
 
-        b.cylinder = box.cylinder;
-        b.teeth = box.teeth;
-        b.bodyParts = box.parts;
+    b.cylinder = new box.cylinder();
+    b.teeth = new box.teeth();
+    b.bodyParts = [];
 
-        // ------------------------
-        // -- Options management --
-        // ------------------------
+    box.parts.forEach(function(part) {
+      b.bodyParts.push(new part());
+    });
 
-        var defaultOptions = {
-            scale: 1,
-            width: 100,
-            height: 100,
-            backgroundColor: 200
-        };
+    // ------------------------
+    // -- Options management --
+    // ------------------------
 
-        _.assign(defaultOptions, options);
-        _.assign(defaultOptions, box.options);
-
-        // -----------------------
-        // -- Drawer management --
-        // -----------------------
-
-        b.drawer = new Drawer(defaultOptions, b.cylinder, b.teeth, b.bodyParts);
+    var defaultOptions = {
+      scale: 1,
+      width: 100,
+      height: 100,
+      backgroundColor: 200
     };
 
-    Box.prototype.draw = function(processing){
-        b.drawer.draw(processing);
-    };
+    _.assign(defaultOptions, options);
+    _.assign(defaultOptions, box.options);
 
-    return Box;
+    b.drawer = new Drawer(defaultOptions, b.cylinder, b.teeth, b.bodyParts);
+    b.player = new Player();
+
+    b.player.subscribe(b.cylinder.onNoteEvent);
+    b.player.loadFile('assets/scores/melody.json');
+    b.player.start();
+  };
+
+  Box.prototype.draw = function (processing) {
+    b.drawer.draw(processing);
+  };
+
+  return Box;
 
 };

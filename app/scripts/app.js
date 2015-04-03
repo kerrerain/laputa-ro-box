@@ -9,8 +9,10 @@ var boxes = {
 // The canvas were the bots will be drawn
 var canvas = document.getElementById("mainCanvas");
 
+var box = robox().createBox(boxes.laputa(), {scale: 1.5});
+
 // Launch processing
 var p = [
-    new Processing(canvas, robox().createBoxDrawer(boxes.laputa(), {scale: 1.5}))
+    new Processing(canvas, box.draw)
 ];
 

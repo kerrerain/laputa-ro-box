@@ -20,6 +20,8 @@ module.exports = function () {
       b.bodyParts.push(new part());
     });
 
+    b.cylinder.teeth = b.teeth;
+
     // ------------------------
     // -- Options management --
     // ------------------------
@@ -37,7 +39,7 @@ module.exports = function () {
     b.drawer = new Drawer(defaultOptions, b.cylinder, b.teeth, b.bodyParts);
     b.player = new Player();
 
-    b.player.subscribe(b.cylinder.onNoteEvent);
+    b.player.subscribe(b.cylinder);
     b.player.loadFile('assets/scores/melody.json');
     b.player.start();
   };

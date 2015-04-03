@@ -3,7 +3,7 @@ module.exports = function() {
 
   function Player() {
     this.data = [];
-    this.tempo = 100;
+    this.tempo = 60;
     this.repeat = true;
     this.subscribers = [];
   }
@@ -42,25 +42,41 @@ module.exports = function() {
 //    xmlhttp.send();
     this.data = [
       {
-        "note": 0,
-        "position": 4
+        "position": 0,
+        "time": 4
       },
       {
-        "note": 4,
-        "position": 8
+        "position": 4,
+        "time": 8
       },
       {
-        "note": 6,
-        "position": 8
+        "position": 6,
+        "time": 8
+      },
+      {
+        "position": 2,
+        "time": 24
+      },
+      {
+        "position": 4,
+        "time": 24
+      },
+      {
+        "position": 11,
+        "time": 30
+      },
+      {
+        "position": 0,
+        "time": 36
       }
     ];
   };
 
-  Player.prototype.subscribe = function(listener) {
+  Player.prototype.subscribe = function(listenerObject) {
     var self = this;
 
     // Add the listener to the queue
-    var index = self.subscribers.push(listener) - 1;
+    var index = self.subscribers.push(listenerObject) - 1;
 
     // Provide a function to remove the listener
     return {
@@ -71,8 +87,8 @@ module.exports = function() {
   };
 
   Player.prototype.publish = function(note) {
-    this.subscribers.forEach(function(listener) {
-      listener.call(this, note);
+    this.subscribers.forEach(function(listenerObject) {
+      listenerObject.onNoteEvent(note);
     });
   };
 
@@ -96,7 +112,7 @@ module.exports = function() {
     data.forEach(function(note) {
       window.setTimeout(function() {
         publish(note);
-      }, note * interval());
+      }, note.time * interval());
     });
 
   };

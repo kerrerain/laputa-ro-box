@@ -6,22 +6,20 @@ module.exports = function () {
     this.rotationSpeed = 0.01; //radian
     this.height = 50;
     this.center = 0;
+    this.teeth = null;
   }
 
-  function CylinderNote() {
-
+  function CylinderNote(positionX) {
+    this.x = positionX;
     this.angle = 0;
-
-    var x = 0;
-
-    var spikeHeight = 2;
-
-    this.display = function (processing) {
-      var factor = processing.cos(this.angle) * (25 + spikeHeight - 1); // radius + spike height
-      processing.ellipse(x, 155 - factor, 2 * Math.abs(processing.sin(this.angle)) + spikeHeight,
-          2 * Math.abs(processing.sin(this.angle)) + spikeHeight);
-    };
+    this.spikeHeight = 2;
   }
+
+  CylinderNote.prototype.display = function(processing) {
+      var factor = processing.cos(this.angle) * (25 + this.spikeHeight - 1); // radius + spike height
+      processing.ellipse(this.x, 155 - factor, 2 * Math.abs(processing.sin(this.angle)) + this.spikeHeight,
+        2 * Math.abs(processing.sin(this.angle)) + this.spikeHeight);
+  };
 
   Cylinder.prototype.render = function(processing) {
     // Tube
@@ -42,7 +40,7 @@ module.exports = function () {
 
     self.notes.forEach(function (note) {
       note.angle += self.rotationSpeed;
-      note.display();
+      note.display(processing);
     });
     // Filter notes that are no longer visible
     self.notes = self.notes.filter(function (note) {
@@ -56,7 +54,7 @@ module.exports = function () {
   };
 
   Cylinder.prototype.onNoteEvent = function(note) {
-    this.notes.push(new CylinderNote());
+    this.notes.push(new CylinderNote(this.teeth.getToothPositionX(note.position)));
   };
 
   return Cylinder;

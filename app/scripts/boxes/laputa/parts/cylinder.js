@@ -55,6 +55,7 @@ module.exports = function () {
 
   Cylinder.prototype.onNoteEvent = function(note) {
     this.notes.push(new CylinderNote(this.teeth.getToothPositionX(note.position)));
+    this.teeth.triggerVibration(note.position);
   };
 
   return Cylinder;

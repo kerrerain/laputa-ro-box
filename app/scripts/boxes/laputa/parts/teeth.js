@@ -2,15 +2,56 @@ module.exports = function () {
   'use strict';
 
   function Tooth() {
-    this.easing = 0.1;
+    this.easing = 0.05;
     this.twistX = 0;
     this.twistZ = 0;
   }
 
   Tooth.prototype.display = function(processing, positionX) {
     processing.pushMatrix();
-    processing.translate(positionX, 0);
-    processing.rect(0, 100, 3 + this.twistX, 53);
+    processing.translate(positionX, 25);
+//    processing.rect(0, 100, 3 + this.twistX, 53);
+
+    processing.beginShape();
+
+    processing.curveVertex(0, 53);
+    processing.curveVertex(0, 53);
+    processing.curveVertex(this.twistX, 100);
+    processing.curveVertex(this.twistX, 100);
+
+    processing.endShape();
+
+    processing.beginShape();
+    processing.vertex(0, 53);
+    processing.vertex(3, 53);
+    processing.endShape();
+
+    processing.beginShape();
+    processing.vertex(0, 100);
+    processing.vertex(3, 100);
+    processing.endShape();
+
+    processing.beginShape();
+
+    processing.curveVertex(3, 53);
+    processing.curveVertex(3, 53);
+    processing.curveVertex(3 + this.twistX, 100);
+    processing.curveVertex(3 + this.twistX, 100);
+
+    processing.endShape();
+
+//    processing.curveVertex(this.twistX, 100);
+//    processing.curveVertex(this.twistX, 100);
+//    processing.curveVertex(0, 53);
+//    processing.vertex(0, 53);
+//    processing.vertex(3, 53);
+//    processing.curveVertex(3 + this.twistX, 100);
+//    processing.vertex(3 + this.twistX, 100);
+//    processing.vertex(this.twistX, 100);
+//    processing.vertex(this.twistX, 100);
+
+    processing.endShape();
+
     processing.popMatrix();
     this.computetwistX();
   };

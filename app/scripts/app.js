@@ -16,3 +16,10 @@ var p = [
     new Processing(canvas, box.draw)
 ];
 
+var canvasTest = document.getElementById("testCanvas");
+
+var test = require('./test/test')();
+var p = [
+  new Processing(canvasTest, test.draw)
+];
+

@@ -11,6 +11,13 @@ module.exports = function() {
     var originMouseY = 0;
     var absTwistZ = 0;
 
+    var springConstant = 1;
+    var mass = 50;
+    var restoringForce = 0;
+    var acceleration = 0;
+    var velocity = 0;
+    var friction = 1;
+
     processing.setup = function () {
       processing.size(400, 400);
     };
@@ -19,11 +26,20 @@ module.exports = function() {
       processing.background(200);
       processing.scale(2);
       processing.pushMatrix();
+
+      processing.text("acceleration: " + acceleration, 15, 15);
+      processing.text("twistZ: " + twistZ, 15, 30);
+
       processing.translate(200 / 2, 50);
       processing.strokeWeight(1);
 
       // Center the shape
       processing.translate(-offset, 0);
+
+      restoringForce = - springConstant * twistZ;
+      acceleration = restoringForce / mass;
+      velocity += acceleration;
+      twistZ += velocity;
 
       absTwistZ = Math.abs(twistZ);
 
@@ -51,6 +67,8 @@ module.exports = function() {
 
     processing.mouseDragged = function() {
       twistZ = processing.mouseY - originMouseY;
+      velocity = 0;
+      acceleration = 0;
     };
   };
   return new Test();

@@ -11,12 +11,12 @@ module.exports = function() {
     var originMouseY = 0;
     var absTwistZ = 0;
 
-    var springConstant = 1;
+    var springConstant = 45;
     var mass = 50;
     var restoringForce = 0;
     var acceleration = 0;
     var velocity = 0;
-    var friction = 1;
+    var friction = 0.75;
 
     processing.setup = function () {
       processing.size(400, 400);
@@ -27,21 +27,22 @@ module.exports = function() {
       processing.scale(2);
       processing.pushMatrix();
 
-      processing.text("acceleration: " + acceleration, 15, 15);
-      processing.text("twistZ: " + twistZ, 15, 30);
+      processing.text("acceleration: " + acceleration.toFixed(2), 15, 15);
+      processing.text("velocity: " + velocity.toFixed(2), 15, 30);
+      processing.text("twistZ: " + twistZ.toFixed(2), 15, 45);
 
-      processing.translate(200 / 2, 50);
+      processing.translate(200 / 2, 70);
       processing.strokeWeight(1);
 
       // Center the shape
       processing.translate(-offset, 0);
 
       restoringForce = - springConstant * twistZ;
-      acceleration = restoringForce / mass;
+      acceleration = restoringForce / mass - (acceleration * friction);
       velocity += acceleration;
       twistZ += velocity;
 
-      absTwistZ = Math.abs(twistZ);
+      absTwistZ = Math.abs(twistZ) / 10;
 
       processing.beginShape();
       processing.vertex(0, 0);
@@ -62,7 +63,6 @@ module.exports = function() {
     processing.mouseReleased = function() {
       originMouseX = 0;
       originMouseY = 0;
-      twistZ = 0;
     };
 
     processing.mouseDragged = function() {

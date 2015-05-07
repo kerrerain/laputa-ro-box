@@ -1,79 +1,76 @@
+var _ = require('lodash')();
+
 module.exports = function () {
   'use strict';
 
+  var width = 4;
+  var length = 55;
+  var offset = width / 2;
+  var twistFactor = 20;
+
+  var springConstant = 45;
+  var mass = 50;
+  var friction = 0.75;
+
+  var vibrationDelay = 500;
+
   function Tooth() {
-    this.easing = 0.05;
     this.twistX = 0;
     this.twistZ = 0;
+
+    this.acceleration = 0;
+    this.velocity = 0;
   }
+
+  Tooth.prototype.computetwistX = function() {
+    var restoringForce = - springConstant * this.twistX;
+    this.acceleration = restoringForce / mass - (this.acceleration * friction);
+    this.velocity += this.acceleration;
+    this.twistX += this.velocity;
+  };
 
   Tooth.prototype.display = function(processing, positionX) {
     processing.pushMatrix();
-    processing.translate(positionX, 25);
-//    processing.rect(0, 100, 3 + this.twistX, 53);
+    processing.translate(positionX - offset, 20 + length);
+
+    this.computetwistX();
+
+    var absTwistX = Math.abs(this.twistX) / twistFactor;
+    var absTwistZ = Math.abs(this.twistZ) / twistFactor;
 
     processing.beginShape();
-
-    processing.curveVertex(0, 53);
-    processing.curveVertex(0, 53);
-    processing.curveVertex(this.twistX, 100);
-    processing.curveVertex(this.twistX, 100);
-
-    processing.endShape();
-
-    processing.beginShape();
-    processing.vertex(0, 53);
-    processing.vertex(3, 53);
-    processing.endShape();
-
-    processing.beginShape();
-    processing.vertex(0, 100);
-    processing.vertex(3, 100);
-    processing.endShape();
-
-    processing.beginShape();
-
-    processing.curveVertex(3, 53);
-    processing.curveVertex(3, 53);
-    processing.curveVertex(3 + this.twistX, 100);
-    processing.curveVertex(3 + this.twistX, 100);
-
-    processing.endShape();
-
-//    processing.curveVertex(this.twistX, 100);
-//    processing.curveVertex(this.twistX, 100);
-//    processing.curveVertex(0, 53);
-//    processing.vertex(0, 53);
-//    processing.vertex(3, 53);
-//    processing.curveVertex(3 + this.twistX, 100);
-//    processing.vertex(3 + this.twistX, 100);
-//    processing.vertex(this.twistX, 100);
-//    processing.vertex(this.twistX, 100);
-
+    processing.vertex(0, 0);
+    processing.bezierVertex(0, length + absTwistX + absTwistZ, 0 - this.twistX - this.twistZ, length + absTwistX + absTwistZ, 0 - this.twistX - this.twistZ, length + absTwistX + absTwistZ);
+    processing.vertex(width - this.twistX + this.twistZ, length + absTwistX + absTwistZ);
+    processing.bezierVertex(width - this.twistX + this.twistZ, length + absTwistX + absTwistZ, width, length + absTwistX + absTwistZ, width, 0);
+    processing.vertex(0, 0);
     processing.endShape();
 
     processing.popMatrix();
-    this.computetwistX();
-  };
-
-  Tooth.prototype.computetwistX = function() {
-    if (Math.abs(this.twistX) > 0) {
-      this.twistX += this.twistX < 0 ? this.easing : -this.easing;
-      this.twistX = - this.twistX;
-      if (Math.abs(this.twistX) < this.easing) {
-        this.twistX = 0;
-      }
-    }
   };
 
   Tooth.prototype.triggerVibration = function() {
-    this.twistX = 2;
+    var self = this;
+
+    self.twisted = true;
+
+    var interval = window.setInterval(function() {
+      self.twistZ += 1 / twistFactor;
+    }, 10);
+
+    window.setTimeout(function() {
+      self.twistX = self.twistZ * twistFactor;
+      self.twistZ = 0;
+      self.twisted = false;
+      window.clearInterval(interval);
+    }, vibrationDelay);
+
   };
 
   function Teeth(numberOfTeeth, toothWidth, toothMargin) {
     this.teeth = [];
     this.numberOfTeeth = numberOfTeeth || 12;
-    this.toothWidth = toothWidth || 3;
+    this.toothWidth = toothWidth || 4;
     this.toothMargin = toothMargin || 2;
     this.offsetLeft = this.numberOfTeeth * (this.toothWidth + this.toothMargin) / 2;
 

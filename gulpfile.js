@@ -63,11 +63,13 @@ gulp.task('vendor', function () {
 });
 
 // Watching several types of resources
-gulp.task('watch', function () {
+gulp.task('watch-files', function () {
   gulp.watch(stylusGlob, ['styles']);
   gulp.watch(javascriptGlob, ['javascript']);
   gulp.watch('./app/index.html', ['html']);
 });
+
+gulp.task('watch', ['dist', 'watch-files']);
 
 // Running all the task in series
 gulp.task('dist', ['styles', 'javascript', 'html', 'assets', 'vendor']);

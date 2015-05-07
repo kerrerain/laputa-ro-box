@@ -5,11 +5,15 @@ module.exports = function() {
   Test.prototype.draw = function(processing) {
 
     var width = 6;
+    var length = 50;
     var offset = width / 2;
+    var twistX = 0;
     var twistZ = 0;
     var originMouseX = 0;
-    var originMouseY = 0;
+    var originMouseZ = 0;
+    var absTwistX = 0;
     var absTwistZ = 0;
+    var twistFactor = 10;
 
     var springConstant = 45;
     var mass = 50;
@@ -29,7 +33,7 @@ module.exports = function() {
 
       processing.text("acceleration: " + acceleration.toFixed(2), 15, 15);
       processing.text("velocity: " + velocity.toFixed(2), 15, 30);
-      processing.text("twistZ: " + twistZ.toFixed(2), 15, 45);
+      processing.text("twistZ: " + twistX.toFixed(2), 15, 45);
 
       processing.translate(200 / 2, 70);
       processing.strokeWeight(1);
@@ -37,18 +41,19 @@ module.exports = function() {
       // Center the shape
       processing.translate(-offset, 0);
 
-      restoringForce = - springConstant * twistZ;
+      restoringForce = - springConstant * twistX;
       acceleration = restoringForce / mass - (acceleration * friction);
       velocity += acceleration;
-      twistZ += velocity;
+      twistX += velocity;
 
-      absTwistZ = Math.abs(twistZ) / 10;
+      absTwistX = Math.abs(twistX) / twistFactor;
+      absTwistZ = Math.abs(twistZ);
 
       processing.beginShape();
       processing.vertex(0, 0);
-      processing.bezierVertex(0, 50 + absTwistZ, 0 - twistZ, 50 + absTwistZ, 0 - twistZ, 50 + absTwistZ);
-      processing.vertex(width - twistZ, 50 + absTwistZ);
-      processing.bezierVertex(width - twistZ, 50 + absTwistZ, width, 50 + absTwistZ, width, 0);
+      processing.bezierVertex(0, length + absTwistX + absTwistZ, 0 - twistX - twistZ, length + absTwistX + absTwistZ, 0 - twistX - twistZ, length + absTwistX + absTwistZ);
+      processing.vertex(width - twistX + twistZ, length + absTwistX + absTwistZ);
+      processing.bezierVertex(width - twistX + twistZ, length + absTwistX + absTwistZ, width, length + absTwistX + absTwistZ, width, 0);
       processing.vertex(0, 0);
       processing.endShape();
 
@@ -57,16 +62,18 @@ module.exports = function() {
 
     processing.mousePressed = function() {
       originMouseX = processing.mouseX;
-      originMouseY = processing.mouseY;
+      originMouseZ = processing.mouseY;
     };
 
     processing.mouseReleased = function() {
       originMouseX = 0;
-      originMouseY = 0;
+      originMouseZ = 0;
+      twistX = twistZ * twistFactor;
+      twistZ = 0;
     };
 
     processing.mouseDragged = function() {
-      twistZ = processing.mouseY - originMouseY;
+      twistZ = (processing.mouseY - originMouseZ) / twistFactor;
       velocity = 0;
       acceleration = 0;
     };

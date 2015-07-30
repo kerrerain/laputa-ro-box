@@ -3,14 +3,12 @@ var _ = require('lodash')();
 module.exports = function () {
   'use strict';
 
-  var width = 4;
-  var length = 55;
-  var offset = width / 2;
-  var twistFactor = 20;
+  var TOOTH_WIDTH = 4;
+  var TOOTH_LENGTH = 55;
 
-  var springConstant = 45;
-  var mass = 50;
-  var friction = 0.75;
+  var K = 0.90; // Spring constant
+  var M = 0.25; // Mass
+  var D = 0.90; // Damping between 0 and 1
 
   var vibrationDelay = 500;
 
@@ -23,26 +21,33 @@ module.exports = function () {
   }
 
   Tooth.prototype.computetwistX = function() {
-    var restoringForce = - springConstant * this.twistX;
-    this.acceleration = restoringForce / mass - (this.acceleration * friction);
-    this.velocity += this.acceleration;
-    this.twistX += this.velocity;
+    this.restoringForce = - K * this.twistX; // Restoring force of a spring: f=-kx
+    this.acceleration = this.restoringForce / M;
+    this.velocity = D * (this.velocity + this.acceleration); // D is between 0 and 1 --> reduces velocity
+    this.twistX = this.twistX + this.velocity;
+
+    if (Math.abs(this.velocity) < 0.1 && Math.abs(this.acceleration) < 0.1) {
+      this.restoringForce = 0;
+      this.acceleration = 0;
+      this.velocity = 0;
+      this.twistX = 0;
+    }
   };
 
   Tooth.prototype.display = function(processing, positionX) {
     processing.pushMatrix();
-    processing.translate(positionX - offset, 20 + length);
+    processing.translate(positionX - (TOOTH_WIDTH / 2), 20 + TOOTH_LENGTH);
 
     this.computetwistX();
 
-    var absTwistX = Math.abs(this.twistX) / twistFactor;
-    var absTwistZ = Math.abs(this.twistZ) / twistFactor;
+    var absTwistX = Math.abs(this.twistX);
+    var absTwistZ = Math.abs(this.twistZ) / 5;
 
     processing.beginShape();
     processing.vertex(0, 0);
-    processing.bezierVertex(0, length + absTwistX + absTwistZ, 0 - this.twistX - this.twistZ, length + absTwistX + absTwistZ, 0 - this.twistX - this.twistZ, length + absTwistX + absTwistZ);
-    processing.vertex(width - this.twistX + this.twistZ, length + absTwistX + absTwistZ);
-    processing.bezierVertex(width - this.twistX + this.twistZ, length + absTwistX + absTwistZ, width, length + absTwistX + absTwistZ, width, 0);
+    processing.bezierVertex(0, TOOTH_LENGTH / 8 + absTwistZ, 0, TOOTH_LENGTH / 1.5 + absTwistZ, 0 - this.twistX - absTwistZ, TOOTH_LENGTH + absTwistZ);
+    processing.vertex(TOOTH_WIDTH - this.twistX + absTwistZ, TOOTH_LENGTH + absTwistZ);
+    processing.bezierVertex(TOOTH_WIDTH, TOOTH_LENGTH / 1.5 + absTwistZ, TOOTH_WIDTH, TOOTH_LENGTH / 8 + absTwistZ, TOOTH_WIDTH, 0);
     processing.vertex(0, 0);
     processing.endShape();
 
@@ -55,11 +60,11 @@ module.exports = function () {
     self.twisted = true;
 
     var interval = window.setInterval(function() {
-      self.twistZ += 1 / twistFactor;
+      self.twistZ += 0.1;
     }, 10);
 
     window.setTimeout(function() {
-      self.twistX = self.twistZ * twistFactor;
+      self.twistX = self.twistZ;
       self.twistZ = 0;
       self.twisted = false;
       window.clearInterval(interval);

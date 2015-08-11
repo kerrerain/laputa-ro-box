@@ -3,7 +3,7 @@ module.exports = function () {
   'use strict';
 
   function Body() {
-    this.parts = [new Neck(), new LeftArm(), new RightArm(), new Torso(), new Head(), new Goggles()];
+    this.parts = [new Neck(), new LeftArm(), new RightArm(), new Torso(), new Head()];
   }
 
   Body.prototype.display = function (processing) {
@@ -87,20 +87,6 @@ module.exports = function () {
       processing.endShape();
 
       processing.fill(255);
-    };
-  }
-
-  function Goggles() {
-    this.display = function (processing) {
-      // Shape
-      processing.rectMode(processing.CENTER);
-      processing.rect(0, 60, 70, 30);
-      // Eyes
-      processing.ellipse(-15, 65, 10, 10);
-      processing.ellipse(15, 60, 15, 15);
-      // Nostrils
-      processing.ellipse(0, 60, 2, 2);
-      processing.ellipse(0, 70, 2, 2);
     };
   }
 

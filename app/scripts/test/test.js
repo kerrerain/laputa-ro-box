@@ -11,7 +11,6 @@ module.exports = function() {
     var twistZ = 0;
     var originMouseX = 0;
     var originMouseZ = 0;
-    var absTwistX = 0;
     var absTwistZ = 0;
 
     var K = 0.90; // Spring constant
@@ -56,7 +55,6 @@ module.exports = function() {
         twistX = 0;
       }
 
-      absTwistX = Math.abs(twistX);
       absTwistZ = Math.abs(twistZ) / 5;
 
       processing.beginShape();

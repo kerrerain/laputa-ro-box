@@ -1,6 +1,8 @@
 module.exports = function() {
   'use strict';
 
+  var DELAY_BETWEEN_REPEATS = 1000;
+
   function Player() {
     this.data = [];
     this.tempo = 60;
@@ -13,33 +15,6 @@ module.exports = function() {
   }
 
   Player.prototype.loadFile = function(filePath, onSuccess) {
-//    var self = this;
-//    var xmlhttp;
-//
-//    if (!window.XMLHttpRequest) {
-//      return;
-//    }
-//    xmlhttp = new XMLHttpRequest();
-//
-//    xmlhttp.overrideMimeType('text/plain; charset=x-user-defined');
-//
-//    xmlhttp.onreadystatechange = function() {
-//      if (xmlhttp.readyState === 4 ) {
-//        if(xmlhttp.status === 200){
-//          self.data = parseData(xmlhttp.responseText);
-//          onSuccess.call(this, self.data);
-//        }
-//        else if(xmlhttp.status === 400) {
-//          throw('File not found');
-//        }
-//        else {
-//          throw('The file could not be loaded');
-//        }
-//      }
-//    };
-//
-//    xmlhttp.open("GET", filePath, true);
-//    xmlhttp.send();
     this.data = [
       {
         "position": 0,
@@ -113,8 +88,15 @@ module.exports = function() {
       window.setTimeout(function() {
         publish(note);
       }, note.time * interval());
-    });
 
+      if (self.repeat === true){
+        window.setInterval(function() {
+          window.setTimeout(function() {
+            publish(note);
+          }, note.time * interval());
+        }, self.data[self.data.length - 1].time * interval() + DELAY_BETWEEN_REPEATS);
+      }
+    });
   };
 
   Player.prototype.resume = function() {

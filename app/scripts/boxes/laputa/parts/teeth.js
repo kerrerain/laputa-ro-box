@@ -13,6 +13,7 @@ module.exports = function () {
   var D = 0.95; // Damping between 0 and 1
 
   var vibrationDelay = 500;
+  var teethDrawingStack = [];
 
   function Tooth(positionX, positionY, length) {
     this.twistX = 0;
@@ -128,9 +129,17 @@ module.exports = function () {
     processing.translate(0, 75);
     // Draw the teeth base
     this.teethBase.display(processing);
+    // Sort the teeth
+    teethDrawingStack = [];
+    this.teeth.forEach(function(tooth) {
+      teethDrawingStack.push(tooth);
+    });
+    teethDrawingStack = teethDrawingStack.sort(function(a, b) {
+      return a.twisted || Math.abs(a.twistX) - Math.abs(b.twistX);
+    });
     // Draw each tooth
-    for (var i = 0; i < this.numberOfTeeth; i++) {
-      this.teeth[i].display(processing);
+    for (var i = 0; i < this.teeth.length; i++) {
+      teethDrawingStack[i].display(processing);
     }
     // Reset translation
     processing.translate(0, 0);

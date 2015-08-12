@@ -1,7 +1,7 @@
 laputa-ro-box
 =============
 
-A robot which plays tunes with its robot teeth.
+A robot which plays tunes with its robot teeth, available at http://magleff.github.io/laputa-ro-box
 
 Build
 =============

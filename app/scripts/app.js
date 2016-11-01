@@ -1,25 +1,16 @@
-// Setup core module
-var robox = require('./robox/');
+(function() {
+	'use strict';
+	
+	var Box = require('./box/');
+	var canvas = document.getElementById("mainCanvas");
 
-// Setup boxes
-var boxes = {
-    laputa: require('./boxes/laputa/')
-};
+	new Processing(canvas, new Box({
+		scale: 1.5
+	}).draw);
 
-// The canvas were the bots will be drawn
-var canvas = document.getElementById("mainCanvas");
+	// var canvasTest = document.getElementById("testCanvas");
 
-var box = robox().createBox(boxes.laputa(), {scale: 1.5});
+	// var test = require('./test/test')();
+	// new P(canvasTest, test.draw)
 
-// Launch processing
-var p = [
-    new Processing(canvas, box.draw)
-];
-
-var canvasTest = document.getElementById("testCanvas");
-
-var test = require('./test/test')();
-var p = [
-  new Processing(canvasTest, test.draw)
-];
-
+})();

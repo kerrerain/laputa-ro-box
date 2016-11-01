@@ -5,6 +5,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var mocha = require('gulp-mocha');
 
 var getBundleName = function () {
   var version = require('./package.json').version;
@@ -73,3 +74,9 @@ gulp.task('watch', ['dist', 'watch-files']);
 
 // Running all the task in series
 gulp.task('dist', ['styles', 'javascript', 'html', 'assets', 'vendor']);
+
+gulp.task('test', () => 
+    gulp.src('test/**/*.spec.js', {read: false})
+        // gulp-mocha needs filepaths so you can't have any plugins before it
+        .pipe(mocha({reporter: 'nyan'}))
+);

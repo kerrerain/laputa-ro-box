@@ -2,23 +2,29 @@
 	'use strict';
 
 	var Body = require('./body');
+	var Mechanism = require('./mechanism/');
 	var setup = require('./setup');
 	var _ = require('lodash');
 
-	module.exports = Box;
+	var options = {
+		scale: 1,
+		width: 400,
+		height: 200,
+		backgroundColor: 200,
+		notes: 16,
+		tooth: {
+			width: 4,
+			length: 55
+		}
+	};
 
 	function Box(customOptions) {
 		var self = this;
 
-		var options = {
-			scale: 1,
-			width: 400,
-			height: 200,
-			backgroundColor: 200
-		};
-
 		_.assign(options, customOptions);
 
-		self.draw = setup(options, new Body());
+		self.draw = setup(options, new Body(), new Mechanism(options));
 	}
+
+	module.exports = Box;
 })();

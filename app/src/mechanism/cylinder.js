@@ -1,9 +1,5 @@
-(function() {
-	'use strict';
-
-	function Cylinder() {}
-
-	Cylinder.prototype.display = function(processing) {
+class Cylinder {
+	display(processing) {
 		// Tube
 		processing.rectMode(processing.CENTER);
 		processing.rect(0, 155, 150, 20);
@@ -15,7 +11,7 @@
 		processing.bezierVertex(60, 200, 60, 110, 50, 130);
 		processing.vertex(-50, 130);
 		processing.endShape();
-	};
+	}
+}
 
-	module.exports = Cylinder;
-})();
+export default Cylinder;

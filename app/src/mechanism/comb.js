@@ -1,14 +1,12 @@
-(function() {
-	'use strict';
+import Tooth from './tooth';
 
-	var Tooth = require('./tooth');
-
-	function Comb(options) {
+class Comb {
+	constructor(options) {
 		this.options = options;
-		this.teeth = setupTeeth(options);
+		this.teeth = this.setupTeeth(options);
 	}
 
-	function setupTeeth(options) {
+	setupTeeth(options) {
 		var teeth = [];
 
 		for (var i = 0; i < options.notes; i++) {
@@ -18,7 +16,7 @@
 		return teeth;
 	}
 
-	Comb.prototype.display = function(processing) {
+	display(processing) {
 		var x1 = -50;
 		var x2 = 50;
 		var y1 = 0;
@@ -44,7 +42,7 @@
 
 		// Reset translation
 		processing.translate(0, 0);
-	};
+	}
+}
 
-	module.exports = Comb;
-})();
+export default Comb;

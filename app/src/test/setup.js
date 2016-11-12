@@ -1,4 +1,4 @@
-export default (tooth, soundPlayer) => {
+export default (tooth, synthesizer) => {
 	return processing => {
 		processing.setup = () => {
 			processing.size(400, 400);
@@ -7,7 +7,6 @@ export default (tooth, soundPlayer) => {
 
 		processing.draw = () => {
 			tooth.display(processing);
-			soundPlayer.destination.gain.value = tooth.gain;
 		};
 
 		processing.mousePressed = () => {
@@ -16,6 +15,7 @@ export default (tooth, soundPlayer) => {
 
 		processing.mouseReleased = () => {
 			tooth.mouseReleased(processing);
+			synthesizer.triggerNote('G#3', 100);
 		};
 
 		processing.mouseDragged = () => {

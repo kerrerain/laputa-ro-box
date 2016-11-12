@@ -16,8 +16,6 @@ class Tooth {
 
 		this.originMouseX = 0;
 		this.originMouseZ = 0;
-
-		this.gain = 0;
 	}
 
 	display(processing) {
@@ -33,8 +31,8 @@ class Tooth {
 
 		if (this.vibrating) {
 			this.timeOfVibration += 1;
+			// Equation for a damped harmonic oscillator
 			this.x = Math.exp(-gamma * this.timeOfVibration) * a * Math.cos(omega1 * this.timeOfVibration);
-			this.gain = 1 - (this.timeOfVibration / timeOfVibrationEnd);
 		}
 
 		if (this.timeOfVibration > timeOfVibrationEnd) {
@@ -43,8 +41,6 @@ class Tooth {
 			this.x = 0;
 			this.gain = 0;
 		}
-
-		processing.text("Gain: " + this.gain, 15, 80);
 
 		this.absTwistZ = Math.abs(this.z) / 5;
 
@@ -68,19 +64,19 @@ class Tooth {
 	mousePressed(processing) {
 		this.originMouseX = processing.mouseX;
 		this.originMouseZ = processing.mouseY;
-	};
+	}
 
-	mouseReleased(processing) {
+	mouseReleased() {
 		this.originMouseX = 0;
 		this.originMouseZ = 0;
 		this.vibrating = true;
 		this.timeOfVibration = 0;
 		this.z = 0;
-	};
+	}
 
 	mouseDragged(processing) {
 		this.z = (processing.mouseY - this.originMouseZ) / 15;
-	};
+	}
 }
 
 export default Tooth;

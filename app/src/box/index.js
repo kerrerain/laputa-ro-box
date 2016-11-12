@@ -1,5 +1,5 @@
 import Body from './body';
-import Mechanism from '../mechanism/mechanism';
+import Mechanism from '../mechanism';
 import setup from './setup';
 import _ from 'lodash';
 

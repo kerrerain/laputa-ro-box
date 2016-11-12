@@ -1,11 +1,9 @@
-const gamma = 0.02;
-const a = 5;
-const omega1 = 10;
-// TODO compute the end time from the parameters.
-const timeOfVibrationEnd = 100;
+import Oscillator from './oscillator';
 
 class Tooth {
 	constructor() {
+		this.oscillator = new Oscillator();
+
 		this.width = 6;
 		this.length = 50;
 		this.offset = this.width / 2;
@@ -29,36 +27,25 @@ class Tooth {
 		// Center the shape
 		processing.translate(-this.offset, 0);
 
-		if (this.vibrating) {
-			this.timeOfVibration += 1;
-			// Equation for a damped harmonic oscillator
-			this.x = Math.exp(-gamma * this.timeOfVibration) * a * Math.cos(omega1 * this.timeOfVibration);
-		}
+		this.x = this.oscillator.run(1);
+		this.displayTooth(processing);
 
-		if (this.timeOfVibration > timeOfVibrationEnd) {
-			this.vibrating = false;
-			this.timeOfVibration = 0;
-			this.x = 0;
-			this.gain = 0;
-		}
+		processing.popMatrix();
+	}
 
-		this.absTwistZ = Math.abs(this.z) / 5;
+	displayTooth(processing) {
+		let absZ = Math.abs(this.z) / 5;
+		let y1 = this.length / 4 + absZ;
+		let y2 = this.length / 1.5 + absZ;
+		let y3 = this.length + absZ;
 
 		processing.beginShape();
 		processing.vertex(0, 0);
-		processing.bezierVertex(0,
-			this.length / 4 + this.absTwistZ,
-			0, this.length / 1.5 + this.absTwistZ,
-			0 - this.x - this.absTwistZ,
-			this.length + this.absTwistZ);
-		processing.vertex(this.width - this.x + this.absTwistZ,
-			this.length + this.absTwistZ);
-		processing.bezierVertex(this.width, this.length / 1.5 + this.absTwistZ,
-			this.width, this.length / 4 + this.absTwistZ,
-			this.width, 0);
+		processing.bezierVertex(0, y1, 0, y2, 0 - this.x - absZ, y3);
+		processing.vertex(this.width - this.x + absZ, y3);
+		processing.bezierVertex(this.width, y2, this.width, y1, this.width, 0);
 		processing.vertex(0, 0);
 		processing.endShape();
-		processing.popMatrix();
 	}
 
 	mousePressed(processing) {
@@ -69,8 +56,7 @@ class Tooth {
 	mouseReleased() {
 		this.originMouseX = 0;
 		this.originMouseZ = 0;
-		this.vibrating = true;
-		this.timeOfVibration = 0;
+		this.oscillator.triggerVibration();
 		this.z = 0;
 	}
 

@@ -2,29 +2,24 @@ export default (tooth, soundPlayer) => {
 	return processing => {
 		processing.setup = () => {
 			processing.size(400, 400);
+			//processing.frameRate(4);
 		};
 
 		processing.draw = () => {
 			tooth.display(processing);
-			soundPlayer.gain.gain.value = tooth.gain;
+			soundPlayer.destination.gain.value = tooth.gain;
 		};
 
-		processing.mousePressed = function() {
-			tooth.originMouseX = processing.mouseX;
-			tooth.originMouseZ = processing.mouseY;
+		processing.mousePressed = () => {
+			tooth.mousePressed(processing);
 		};
 
-		processing.mouseReleased = function() {
-			tooth.originMouseX = 0;
-			tooth.originMouseZ = 0;
-			tooth.twistX = tooth.twistZ;
-			tooth.twistZ = 0;
+		processing.mouseReleased = () => {
+			tooth.mouseReleased(processing);
 		};
 
-		processing.mouseDragged = function() {
-			tooth.twistZ = (processing.mouseY - tooth.originMouseZ) / 15;
-			tooth.velocity = 0;
-			tooth.acceleration = 0;
+		processing.mouseDragged = () => {
+			tooth.mouseDragged(processing);
 		};
 	};
 };

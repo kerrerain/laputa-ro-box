@@ -1,25 +1,42 @@
+import audioContext from './audio-context';
+
+class Carrier {
+	constructor() {
+		this.gain = audioContext.createGain();
+		this.gain.gain.value = 1;
+		this.osc = audioContext.createOscillator();
+		this.osc.type = 'sine';
+		this.osc.frequency.value = 440;
+		this.osc.connect(this.gain);
+		this.osc.start(0);
+	}
+}
+
+class Modulator {
+	constructor() {
+		this.gain = audioContext.createGain();
+		this.gain.gain.value = 1;
+		this.osc = audioContext.createOscillator();
+		this.osc.type = 'triangle';
+		this.osc.frequency.value = 800;
+		this.osc.connect(this.gain);
+		this.osc.start(0);
+	}
+}
+
 class SoundPlayer {
 	constructor() {
-		let audioContext = this.createAudioContext();
+		this.destination = audioContext.createGain();
+		this.destination.gain.value = 0;
+		this.destination.connect(audioContext.destination);
 
-		this.gain = audioContext.createGain();
-		this.gain.gain.value = 0;
-		this.gain.connect(audioContext.destination);
+		// FM Synthesis
 
-		let osc = audioContext.createOscillator();
-		osc.type = 'sine';
-		osc.frequency.value = 440;
-		osc.detune.value = 0;
-		osc.connect(this.gain);
-		osc.start(0);
-	}
+		let carrier = new Carrier();
+		let modulator = new Modulator();
 
-	createAudioContext() {
-		if (window.AudioContext) {
-			return new window.AudioContext();
-		} else {
-			return new window.webkitAudioContext();
-		}
+		modulator.gain.connect(carrier.osc.frequency);
+		carrier.gain.connect(this.destination);
 	}
 }
 

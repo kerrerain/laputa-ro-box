@@ -5,6 +5,7 @@ class Comb {
 		this.options = options;
 		this.notes = notes;
 		this.teeth = this.setupTeeth(options, notes);
+		this.offsetX = -1 * this.teeth.length * this.options.tooth.width / 2;
 	}
 
 	setupTeeth(options, notes) {
@@ -18,8 +19,8 @@ class Comb {
 	}
 
 	display(processing) {
-		var x1 = -50;
-		var x2 = 50;
+		var x1 = 0;
+		var x2 = this.offsetX;
 		var y1 = 0;
 		var y2 = 35;
 		var height = y2 - y1;
@@ -27,13 +28,18 @@ class Comb {
 		processing.translate(0, 75);
 		processing.pushMatrix();
 		processing.beginShape();
-		processing.vertex(x1, y1);
-		processing.bezierVertex(x1 - 15, y1 - (height - 5), x1, y1 - height, x1, y1 - height);
-		processing.bezierVertex((x2 - x1) / 2, (y2 - y1) / 2, x2 + 5, y1 - (height - 5), x2 + 5, y1 - (height - 5));
-		processing.bezierVertex(x2 + 15, y2 - 5, x2 + 15, y2 - (height - 5), x2, y2);
-		processing.vertex(x2, y2 + 5);
-		processing.vertex(x1, y2 + 5);
-		processing.vertex(x1, y1);
+
+		processing.vertex(0, 0);
+		processing.bezierVertex(x1 - 15, y1 - 35, x1, y1 - 35, x1, y1 - 35);
+		processing.bezierVertex(x2, y1 - 10, x2 + 5, y1, x2 + 5, y1 - 10);
+
+		// processing.vertex(x1, y1);
+		// processing.bezierVertex(x1 - 15, y1 - (height - 5), x1, y1 - height, x1, y1 - height);
+		// processing.bezierVertex((x2 - x1) / 2, (y2 - y1) / 2, x2 + 5, y1 - (height - 5), x2 + 5, y1 - (height - 5));
+		// processing.bezierVertex(x2 + 15, y2 - 5, x2 + 15, y2 - (height - 5), x2, y2);
+		// processing.vertex(x2, y2 + 5);
+		// processing.vertex(x1, y2 + 5);
+		// processing.vertex(x1, y1);
 		processing.endShape();
 		processing.popMatrix();
 

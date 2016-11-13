@@ -13,7 +13,7 @@ class Synthesizer {
 
 	playNote(name, duration, offset) {
 		if (this.activeVoices[name]) {
-			this.activeVoices[name].osc.stop();
+			this.activeVoices[name].osc.stop(audioContext.currentTime + offset);
 			delete this.activeVoices[name];
 		}
 

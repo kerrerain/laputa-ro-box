@@ -4,6 +4,7 @@ import Cylinder from '../cylinder';
 import Sequencer from '../sequencer';
 import Synthesizer from '../synthesizer';
 import score from '../scores/melody';
+import notes from './notes';
 import _ from 'lodash';
 
 let options = {
@@ -12,8 +13,8 @@ let options = {
 	height: 200,
 	backgroundColor: 200,
 	tooth: {
-		width: 4,
-		length: 50
+		width: 5,
+		length: 55
 	},
 	oscillator: {
 		gamma: 0.02,
@@ -21,42 +22,30 @@ let options = {
 		amplitude: 3,
 		// TODO compute the end time from the parameters.
 		timeOfVibrationEnd: 100
+	},
+	cylinder: {
+		rotationSpeed: 0.015, //radian
+		pinHeight: 3
 	}
-};
-
-let order = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-
-// Assuming note = 'A3' or 'B#6' for example
-let noteWeight = note => {
-	return order.indexOf(note[0]) + note.length + (Number(note[note.length - 1]) * order.length);
-};
-
-let gatherNotesFromScore = score => {
-	let notesSet = {};
-
-	score.forEach(note => {
-		notesSet[note.n] = true;
-		console.log(note.n, noteWeight(note.n));
-	});
-
-	return Object.keys(notesSet).sort((a, b) => {
-		return noteWeight(a) - noteWeight(b);
-	});
 };
 
 class Box {
 	constructor(customOptions) {
-		// Mechanism
-		this.body = new Body(options);
-		this.comb = new Comb(options, gatherNotesFromScore(score));
-		this.cylinder = new Cylinder(options);
+		// Analysis of the score to find how many notes should be displayed
+		let notesToDisplay = notes(score);
 
-		// Music
+		// Parts
+		this.body = new Body(options);
+		this.comb = new Comb(options, notesToDisplay);
+		this.cylinder = new Cylinder(options, notesToDisplay);
+
+		// Music & animation
 		this.synthesizer = new Synthesizer();
 		this.sequencer = new Sequencer();
 		this.sequencer.load(score);
 		this.sequencer.onNoteEvent(note => {
 			this.comb.triggerNoteAnimation(note.n);
+			this.cylinder.triggerNoteAnimation(note.n);
 			this.synthesizer.playNote(note.n, 1, 0.5);
 		});
 

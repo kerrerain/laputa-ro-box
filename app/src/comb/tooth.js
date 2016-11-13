@@ -9,8 +9,6 @@ class Tooth {
 
 		this.width = options.tooth.width;
 		this.length = options.tooth.length;
-
-		this.offset = this.width / 2;
 		this.offsetX = offsetX;
 
 		this.x = this.offsetX;
@@ -21,7 +19,7 @@ class Tooth {
 		processing.pushMatrix();
 
 		// Center the shape
-		processing.translate(-this.offset + this.offsetX, 0);
+		processing.translate(this.offsetX, 0);
 
 		this.x = this.oscillator.run(1);
 		this.displayTooth(processing);

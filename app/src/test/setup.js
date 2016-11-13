@@ -2,7 +2,6 @@ export default (tooth, synthesizer) => {
 	return processing => {
 		processing.setup = () => {
 			processing.size(400, 400);
-			//processing.frameRate(4);
 		};
 
 		processing.draw = () => {
@@ -15,7 +14,7 @@ export default (tooth, synthesizer) => {
 
 		processing.mouseReleased = () => {
 			tooth.mouseReleased(processing);
-			synthesizer.triggerNote('G#3', 100);
+			synthesizer.triggerNote('C4', 1.5);
 		};
 
 		processing.mouseDragged = () => {

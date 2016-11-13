@@ -9,8 +9,6 @@ class Tooth {
 		this.offset = this.width / 2;
 		this.x = 0;
 		this.z = 0;
-		this.vibrating = false;
-		this.timeOfVibration = 0;
 
 		this.originMouseX = 0;
 		this.originMouseZ = 0;

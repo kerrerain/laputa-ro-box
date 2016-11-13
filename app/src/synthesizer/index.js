@@ -8,16 +8,23 @@ class Synthesizer {
 		this.destination.gain.value = 1;
 		this.destination.connect(audioContext.destination);
 
-		this.voice = new Voice();
-		this.voice.gainNode.connect(this.destination);
+		this.activeVoices = {};
 	}
 
 	triggerNote(name, duration) {
-		this.voice.osc.frequency.value = frequencies[name];
-		this.voice.gainNode.gain.cancelScheduledValues(0);
+		if (this.activeVoices[name]) {
+			this.activeVoices[name].osc.stop();
+			delete this.activeVoices[name];
+		}
+
+		let voice = new Voice(frequencies[name]);
+		this.activeVoices[name] = voice;
+
+		voice.gainNode.connect(this.destination);
+		voice.gainNode.gain.cancelScheduledValues(0);
 		// Time in seconds
-		this.voice.gainNode.gain.setValueAtTime(1, audioContext.currentTime);
-		this.voice.gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1.5);
+		voice.gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+		voice.gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
 	}
 }
 

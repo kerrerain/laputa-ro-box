@@ -1,3 +1,5 @@
+// n -> name of the note
+// t -> delay (from the previous note)
 let melody = [
   // Two voices start
   {

@@ -1,14 +1,12 @@
-import Synthesizer from '../synthesizer';
-
 class Sequencer {
 	constructor() {
 		this.score = [];
 		this.scoreIndex = 0;
 		this.tempo = 80;
 		this.tic = 400; //(60 / this.tempo) / 4; // 16th
-		this.synthesizer = new Synthesizer();
 		this.playing = false;
 		this.loop = true;
+		this.noteEventCallbacks = [];
 	}
 
 	load(score) {
@@ -39,16 +37,26 @@ class Sequencer {
 			}
 		}
 
-		let nextNote = this.score[this.scoreIndex];
+		let note = this.score[this.scoreIndex];
 
 		window.setTimeout(() => {
 			if (this.playing) {
-				this.synthesizer.triggerNote(nextNote.n, 0.5, 0);
+				this.dispatchNoteEvent(note);
 				this.playNextNote();
 			}
-		}, nextNote.t * this.tic);
+		}, note.t * this.tic);
 
 		this.scoreIndex += 1;
+	}
+
+	dispatchNoteEvent(note) {
+		this.noteEventCallbacks.forEach(cb => {
+			cb(note);
+		});
+	}
+
+	onNoteEvent(cb) {
+		this.noteEventCallbacks.push(cb);
 	}
 }
 

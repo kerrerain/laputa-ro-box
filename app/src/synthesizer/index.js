@@ -11,7 +11,7 @@ class Synthesizer {
 		this.activeVoices = {};
 	}
 
-	triggerNote(name, duration) {
+	playNote(name, duration, offset) {
 		if (this.activeVoices[name]) {
 			this.activeVoices[name].osc.stop();
 			delete this.activeVoices[name];
@@ -23,8 +23,8 @@ class Synthesizer {
 		voice.gainNode.connect(this.destination);
 		voice.gainNode.gain.cancelScheduledValues(0);
 		// Time in seconds
-		voice.gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
-		voice.gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
+		voice.gainNode.gain.setValueAtTime(0.25, audioContext.currentTime + offset);
+		voice.gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration + offset);
 	}
 }
 

@@ -1,17 +1,18 @@
 import Tooth from './tooth';
 
 class Comb {
-	constructor(options) {
+	constructor(options, notes) {
 		this.options = options;
-		this.teeth = this.setupTeeth(options);
+		this.notes = notes;
+		this.teeth = this.setupTeeth(options, notes);
 	}
 
-	setupTeeth(options) {
+	setupTeeth(options, notes) {
 		var teeth = [];
 
-		for (var i = 0; i < options.notes; i++) {
-			teeth.push(new Tooth());
-		}
+		notes.forEach((note, index) => {
+			teeth.push(new Tooth(options, index * options.tooth.width, note));
+		});
 
 		return teeth;
 	}
@@ -36,12 +37,29 @@ class Comb {
 		processing.endShape();
 		processing.popMatrix();
 
-		//// Eyes
+		// Eyes
 		processing.ellipse(x1 + 15, y1 - (height / 2) + 5, 15, 15);
 		processing.ellipse(x2 - 15, y2 - (height / 2), 10, 10);
 
 		// Reset translation
 		processing.translate(0, 0);
+
+		this.displayTeeth(processing);
+	}
+
+	displayTeeth(processing) {
+		this.teeth.forEach(tooth => {
+			tooth.display(processing);
+		});
+	}
+
+	triggerNoteAnimation(note) {
+		let teethToAnimate = this.teeth.filter(tooth => {
+			return tooth.note === note;
+		});
+		teethToAnimate.forEach(tooth => {
+			tooth.triggerAnimation();
+		});
 	}
 }
 

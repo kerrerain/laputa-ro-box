@@ -14,7 +14,7 @@ export default (tooth, synthesizer) => {
 
 		processing.mouseReleased = () => {
 			tooth.mouseReleased(processing);
-			synthesizer.triggerNote('C4', 1.5);
+			synthesizer.playNote('C4', 1.5, 0);
 		};
 
 		processing.mouseDragged = () => {
